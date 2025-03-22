@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Cuenta | QuickTrips</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FAF3DD;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: #E29578;
+            padding: 15px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+        .code {
+            font-size: 24px;
+            font-weight: bold;
+            background: #FAD2E1;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            font-size: 12px;
+            color: #4A4A4A;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Confirma tu cuenta en QuickTrips</div>
+        <p>Gracias por registrarte en QuickTrips. Usa el siguiente código para verificar tu cuenta:</p>
+        <div class="code">{{code}}</div>
+        <p>Si no solicitaste este correo, ignóralo.</p>
+        <p>Este código es válido por 20 minutos. Solo puedes usarlo una vez.</p>
+        <p>No es necesario generar un nuevo código si este aún está vigente.</p>
+        <div class="footer">&copy; 2025 QuickTrips. Todos los derechos reservados.</div>
+    </div>
+</body>
+</html>
