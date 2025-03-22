@@ -3,7 +3,7 @@ const databaseErrorHandler = require('../middleware/databaseErrorHandler');
 require('dotenv').config();
 
 const connectDB = async (app) => {
-  const dbConnection = process.env.MONGODB_URI || 'mongodb://localhost:27017/Quick-Trips-api';
+  const dbConnection = process.env.MONGODB_URI;
   try {
     await mongoose.connect(dbConnection, {
       useNewUrlParser: true,
