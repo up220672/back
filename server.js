@@ -43,6 +43,6 @@ swaggerMiddleware(app);
 app.use(errorHandler);
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server listening on: http://${hostname}:${port}`);
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+    console.log(`Server listening on: http://localhost:${process.env.PORT || 3000}`);
 });
