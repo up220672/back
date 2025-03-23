@@ -1,12 +1,12 @@
 // Libraries
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors'); // Importar cors
 const connectDB = require('./src/config/database');
 const routes = require('./src/routes/index');
 const swaggerMiddleware = require('./src/middleware/swagger');
 const errorHandler = require('./src/middleware/errorHandler');
 const path = require('path');
-
 
 // Importar las rutas de almacenamiento de archivos
 const fileStorageRoutes = require('./src/routes/fileStorageRoute');
@@ -18,13 +18,15 @@ const hostname = process.env.HOSTNAME || 'localhost';
 // Connect to the database
 connectDB();
 
+// Middleware para habilitar CORS
+app.use(cors());
+
 // Middleware to parse JSON requests
 app.use(express.json());
 
 // Servir archivos estáticos desde la carpeta "public"
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
-
 
 app.get('/', (req, res) => {
   res.send('Welcome to the holi API');
