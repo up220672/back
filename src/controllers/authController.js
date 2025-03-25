@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user').User;
 const Code = require('../models/secondary_models/codes').Code;
-const RefreshToken =require ('../models/refreshToken');
+const RefreshToken = require('../models/refreshToken');
 const { generateRandomCode } = require('../services/code_generator');
 const { sentEmail } = require('../services/email');
 const errorHandler = require('../middleware/errorHandler');
@@ -13,14 +13,15 @@ const errorHandler = require('../middleware/errorHandler');
 //};
 
 // Function to generate JWT token
-const generateToken = (userId,role) => jwt.sign({ userId,role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+const generateToken = (userId, nombre, role) => jwt.sign({ userId, nombre, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
 // Function to check if user exists
 const checkUserExists = async (email) => User.findOne({ email });
 
 // Function to hash password
 const hashPassword = async (password) => bcrypt.hash(password, 10);
-//function to generate refresh token
+
+// Function to generate refresh token
 const generateRefreshToken = (userId) => {
   const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
   return new RefreshToken({ token: refreshToken, userId }).save();
@@ -74,7 +75,7 @@ exports.register = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     // Create a new user
-    const user = new User({ username, email, password_hash: hashedPassword });
+    const user = new User({ username, email, password_hash: hashedPassword, role: 'user' });
 
     // Save the user in the database
     await user.save();
@@ -106,7 +107,7 @@ exports.register = async (req, res) => {
     });
 
     // Generate a JWT token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.username, user.role);
 
     // Send the response
     res.status(201).json({ message: 'User registered successfully. Please check your email for the verification code.', token });
@@ -157,19 +158,18 @@ exports.login = async (req, res) => {
     }
 
     // Generate a JWT token
-    const token = generateToken(user._id);
-    //generate a refresh token
+    const token = generateToken(user._id, user.username, user.role);
+    // Generate a refresh token
     const refreshToken = await generateRefreshToken(user._id);
 
     // Send the response
-    res.status(200).json({ message: 'Login successful', token,refreshToken:refreshToken.token });
+    res.status(200).json({ message: 'Login successful', token, refreshToken: refreshToken.token });
   } catch (error) {
     errorHandler(res, error);
   }
 };
 
-
-// refresh token
+// Refresh token
 
 /**
  * @swagger
@@ -209,7 +209,7 @@ exports.refreshToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
     const user = await User.findById(decoded.userId);
     if (user) {
-      const newToken = generateToken(user.userId, user.name, user.role);
+      const newToken = generateToken(user._id, user.username, user.role);
       res.status(200).json({ token: newToken });
     } else {
       res.status(401).json({ message: 'Invalid refresh token' });
@@ -501,3 +501,32 @@ exports.resendVerificationCode = async (req, res) => {
   }
 };
 
+// Verify Token
+
+exports.verifyToken = async (req, res) => {
+  try {
+    const { token, type } = req.body;
+
+    if (!token || !type) {
+      return res.status(400).json({ message: 'Token and type are required' });
+    }
+
+    let secret;
+    if (type === 'access') {
+      secret = process.env.JWT_SECRET;
+    } else if (type === 'refresh') {
+      secret = process.env.JWT_REFRESH_SECRET;
+    } else {
+      return res.status(400).json({ message: 'Invalid token type' });
+    }
+
+    try {
+      const decoded = jwt.verify(token, secret);
+      return res.status(200).json({ valid: true, decoded });
+    } catch (error) {
+      return res.status(401).json({ valid: false, message: 'Invalid or expired token' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

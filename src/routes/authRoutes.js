@@ -81,4 +81,15 @@ router.post(
    authController.refreshToken
   );
 
+router.post(
+  '/verify-token',
+  [
+    body('token').notEmpty().withMessage('Token is required'),
+    body('type').isIn(['access', 'refresh']).withMessage('Type must be either "access" or "refresh"'),
+  ],
+  validate,
+  authController.verifyToken
+);
+
 module.exports = router;
+
