@@ -58,7 +58,7 @@ const checkUserActive = async (user_id) => {
  *       500:
  *         description: Server error
  */
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
     const hashedPassword = await hashPassword(password);
 
     // Create a new user
-    const user = new User({ username, email, password_hash: hashedPassword, role: 'user' });
+    const user = new User({ username, email, password_hash: hashedPassword, role: 0 });
 
     // Save the user in the database
     await user.save();
@@ -106,13 +106,20 @@ exports.register = async (req, res) => {
       },
     });
 
-    // Generate a JWT token
+    // Generate a JWT token (access token)
     const token = generateToken(user._id, user.username, user.role);
 
+    // Generate a refresh token
+    const refreshToken = await generateRefreshToken(user._id);
+
     // Send the response
-    res.status(201).json({ message: 'User registered successfully. Please check your email for the verification code.', token });
+    res.status(201).json({
+      message: 'User registered successfully. Please check your email for the verification code.',
+      token,
+      refreshToken: refreshToken.token,
+    });
   } catch (error) {
-    errorHandler(res, error);
+    next(error); // Pasa el error al middleware de manejo de errores
   }
 };
 
