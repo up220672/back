@@ -84,8 +84,7 @@ const UserSchema = new mongoose.Schema({
     type: Number, 
     required: false,
     default: 2,
-    min: 0,
-    max: 2 
+    enum: [0, 1, 2, 3000] // Lista de valores permitidos
   },
   profile_picture: { 
     type: String, 

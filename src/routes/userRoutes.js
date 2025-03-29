@@ -17,7 +17,7 @@ router.post(
     body('email').isEmail().withMessage('Valid email is required'),
     body('phone').notEmpty().withMessage('Phone number is required'),
     body('password_hash').notEmpty().withMessage('Password hash is required'),
-    body('role').isInt({ min: 0, max: 2 }).withMessage('Role must be required or must be 0, 1 or 2')
+    body('role').isInt({ min: 0 }).withMessage('Role must be 0, 1, 2, or 3000')
   ],
   validate,
   userController.createUser
@@ -44,7 +44,7 @@ router.put(
     body('email').optional().isEmail().withMessage('Valid email is required'),
     body('phone').optional().notEmpty().withMessage('Phone number is required'),
     body('password_hash').optional().notEmpty().withMessage('Password hash is required'),
-    body('role').optional().isInt({ min: 0, max: 2 }).withMessage('Role must be 0, 1 or 2')
+    body('role').optional().isInt({ min: 0 }).withMessage('Role must be 0, 1, 2, or 3000')
   ],
   validate,
   userController.updateUser
