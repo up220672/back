@@ -184,6 +184,11 @@ const PropertySchema = new mongoose.Schema({
     type: Number, 
     required: true 
   },
+  is_approved: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
   title: { 
     type: String, 
     required: false,
