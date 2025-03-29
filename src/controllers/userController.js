@@ -38,7 +38,10 @@ exports.createUser = async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
-    res.status(201).send(user);
+    // Eliminar el campo valid_codes de la respuesta
+    const userObject = user.toObject();
+    delete userObject.valid_codes;
+    res.status(201).send(userObject);    
   } catch (error) {
     res.status(400).send({ message: error.message });
   }
@@ -79,7 +82,10 @@ exports.getUser = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: 'User not found or inactive' });
     }
-    res.send(user);
+    // Eliminar el campo valid_codes de la respuesta
+    const userObject = user.toObject();
+    delete userObject.valid_codes;    
+    res.send(userObject);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -120,6 +126,13 @@ exports.getUsersByPage = async (req, res) => {
     const users = await User.find({ is_active: true })
       .skip((page - 1) * limit)
       .limit(limit);
+
+    for (let i = 0; i < users.length; i++) {
+      // Eliminar el campo valid_codes de la respuesta
+      const userObject = users[i].toObject();
+      delete userObject.valid_codes;
+      users[i] = userObject;
+    }
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
@@ -175,7 +188,10 @@ exports.updateUser = async (req, res) => {
       }
     });
     await user.save();
-    res.send(user);
+    // Eliminar el campo valid_codes de la respuesta
+    const userObject = user.toObject();
+    delete userObject.valid_codes;    
+    res.send(userObject);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -188,7 +204,10 @@ exports.checkUserByEmail = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: 'User not found or inactive' });
     }
-    res.send(user);
+    // Eliminar el campo valid_codes de la respuesta
+    const userObject = user.toObject();
+    delete userObject.valid_codes;    
+    res.send(userObject);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -258,6 +277,14 @@ exports.deleteUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({ is_active: true });
+
+    for (let i = 0; i < users.length; i++) {
+      // Eliminar el campo valid_codes de la respuesta
+      const userObject = users[i].toObject();
+      delete userObject.valid_codes;
+      users[i] = userObject;
+    }
+
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
@@ -296,6 +323,14 @@ exports.getAllUsers = async (req, res) => {
 exports.getAllUsersByRole = async (req, res) => {
   try {
     const users = await User.find({ role: req.params.type, is_active: true });
+
+    for (let i = 0; i < users.length; i++) {
+      // Eliminar el campo valid_codes de la respuesta
+      const userObject = users[i].toObject();
+      delete userObject.valid_codes;
+      users[i] = userObject;
+    }
+
     res.send(users);
   } catch (error) {
     res.status(500).send(error);
