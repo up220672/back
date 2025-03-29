@@ -22,7 +22,7 @@ connectDB();
 app.use(cors());
 
 // Middleware to parse JSON requests
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 // Servir archivos estáticos desde la carpeta "public"
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
