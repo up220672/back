@@ -23,6 +23,7 @@ const handleFileUpload = (req, res, folder) => {
 // Controladores
 exports.uploadPhoto = (req, res) => handleFileUpload(req, res, 'images');
 exports.uploadVideo = (req, res) => handleFileUpload(req, res, 'videos');
+exports.uploadPDF = (req, res) => handleFileUpload(req, res, 'pdfs');
 
 // Función genérica para eliminar
 const deleteFile = async (fileName, folder) => {
@@ -47,4 +48,11 @@ exports.deleteVideo = async (req, res) => {
   result.success
     ? res.json({ success: true, message: 'Video eliminado' })
     : res.status(404).json({ success: false, message: 'Video no encontrado' });
+};
+
+exports.deletePDF = async (req, res) => {
+  const result = await deleteFile(req.params.fileName, 'pdfs');
+  result.success
+    ? res.json({ success: true, message: 'PDF eliminado' })
+    : res.status(404).json({ success: false, message: 'PDF no encontrado' });
 };

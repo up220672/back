@@ -32,6 +32,12 @@ const videoUploader = multer({
   limits: { fileSize: 100 * 1024 * 1024 }
 });
 
+const pdfUploader = multer({
+  storage: createStorage('pdfs'),
+  fileFilter: fileFilter(['application/pdf']),
+  limits: { fileSize: 20 * 1024 * 1024 } // Límite de 10 MB para PDFs
+});
+
 // Manejo de errores
 const handleUploadErrors = (err, req, res, next) => {
   if (err instanceof multer.MulterError || err) {
@@ -45,5 +51,6 @@ const handleUploadErrors = (err, req, res, next) => {
 
 module.exports = {
   uploadImage: [imageUploader.single('file'), handleUploadErrors],
-  uploadVideo: [videoUploader.single('file'), handleUploadErrors]
+  uploadVideo: [videoUploader.single('file'), handleUploadErrors],
+  uploadPDF: [pdfUploader.single('file'), handleUploadErrors]
 };
