@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/fileStorageController');
-const { uploadImage, uploadVideo, uploadPDF } = require('../middleware/fileStorage');
+const { uploadImage, uploadVideo, uploadPDF, uploadTemp } = require('../middleware/fileStorage');
 const authMiddleware = require('../middleware/authMiddleware');
 
 // Rutas de subida
@@ -21,6 +21,17 @@ router.post('/upload/pdf',
   authMiddleware,
   ...uploadPDF,
   controller.uploadPDF
+);
+
+router.post('/upload/temp', 
+  authMiddleware,
+  ...uploadTemp,
+  controller.uploadTemp
+);
+
+router.post('/confirm', 
+  authMiddleware,
+  controller.confirmFile
 );
 
 // Rutas de eliminación

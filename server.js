@@ -7,6 +7,10 @@ const routes = require('./src/routes/index');
 const swaggerMiddleware = require('./src/middleware/swagger');
 const errorHandler = require('./src/middleware/errorHandler');
 const path = require('path');
+const cleanTempFiles = require('./utils/cleanTempFiles');
+
+// Ejecutar cada hora
+setInterval(cleanTempFiles, 60 * 60 * 1000); // Cada 1 hora
 
 // Importar las rutas de almacenamiento de archivos
 const fileStorageRoutes = require('./src/routes/fileStorageRoute');

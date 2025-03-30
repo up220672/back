@@ -38,6 +38,12 @@ const pdfUploader = multer({
   limits: { fileSize: 20 * 1024 * 1024 } // Límite de 10 MB para PDFs
 });
 
+const tempUploader = multer({
+  storage: createStorage('temp'),
+  fileFilter: fileFilter(['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'application/pdf']),
+  limits: { fileSize: 100 * 1024 * 1024 } // Límite de 100 MB
+});
+
 // Manejo de errores
 const handleUploadErrors = (err, req, res, next) => {
   if (err instanceof multer.MulterError || err) {
@@ -52,5 +58,6 @@ const handleUploadErrors = (err, req, res, next) => {
 module.exports = {
   uploadImage: [imageUploader.single('file'), handleUploadErrors],
   uploadVideo: [videoUploader.single('file'), handleUploadErrors],
-  uploadPDF: [pdfUploader.single('file'), handleUploadErrors]
+  uploadPDF: [pdfUploader.single('file'), handleUploadErrors],
+  uploadTemp: [tempUploader.single('file'), handleUploadErrors] // Nuevo uploader para la carpeta temporal
 };
