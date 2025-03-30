@@ -7,7 +7,7 @@ const routes = require('./src/routes/index');
 const swaggerMiddleware = require('./src/middleware/swagger');
 const errorHandler = require('./src/middleware/errorHandler');
 const path = require('path');
-const cleanTempFiles = require('./utils/cleanTempFiles');
+const cleanTempFiles = require('./src/services/cleanTempFiles');
 
 // Ejecutar cada hora
 setInterval(cleanTempFiles, 60 * 60 * 1000); // Cada 1 hora
