@@ -32,6 +32,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 app.use('/pdfs', express.static(path.join(__dirname, 'public/pdfs')));
+app.use('/temp', express.static(path.join(__dirname, 'public/temp')));
 
 app.get('/', (req, res) => {
   res.send('Welcome to the holi API');
