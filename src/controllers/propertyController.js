@@ -433,3 +433,38 @@ exports.getAllReviewsFromPropertyId = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+const mongoose = require('mongoose');
+
+exports.getAllReviewsFromUserID = async (req, res) => {
+  try {
+    // Validar el user_id
+    if (!req.params.user_id || !mongoose.Types.ObjectId.isValid(req.params.user_id)) {
+      return res.status(400).json({ success: false, message: "Invalid user ID" });
+    }
+
+    // Buscar propiedades con reseñas del usuario
+    const properties = await Property.find({
+      "reviews.user_id": new mongoose.Types.ObjectId(req.params.user_id)
+    });
+
+    // Extraer y filtrar las reseñas
+    const userReviews = properties.flatMap(property => 
+      property.reviews.filter(review => 
+        review.user_id && review.user_id.toString() === req.params.user_id
+      )
+    );
+
+    // Siempre devolver un array, aunque esté vacío
+    res.status(200).json({ success: true, reviews: userReviews });
+    
+  } catch (error) {
+    console.error("Error fetching user reviews:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Internal server error",
+      error: error.message 
+    });
+  }
+};

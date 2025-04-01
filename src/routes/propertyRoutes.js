@@ -21,8 +21,6 @@ router.post(
         body('is_proof_of_address_verified').notEmpty().withMessage('Is proof of address verified is required'),
         body('land_use_permit').notEmpty().withMessage('Land use permit is required'),
         body('is_land_use_permit_verified').notEmpty().withMessage('Is land use permit verified is required'),
-        body('bedrooms').notEmpty().withMessage('Bedrooms is required'),
-        body('kitchens').notEmpty().withMessage('Kitchens is required')
     ],
     validate,
     propertyController.addNewProperty
@@ -82,6 +80,16 @@ router.get(
     ],
     validate,
     propertyController.getAllReviewsFromPropertyId
+);
+
+router.get(
+    '/review/user/:user_id',
+    authMiddleware,
+    [
+        param('user_id').isMongoId().withMessage('Invalid user ID')
+    ],
+    validate,
+    propertyController.getAllReviewsFromUserID
 );
 
 router.post(

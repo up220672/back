@@ -37,7 +37,7 @@ const RoomAmenitiesSchema = new mongoose.Schema({
     default: false 
   },
   lamps: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },
@@ -47,7 +47,7 @@ const RoomAmenitiesSchema = new mongoose.Schema({
     default: false 
   },
   sofa: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },
@@ -67,12 +67,12 @@ const RoomAmenitiesSchema = new mongoose.Schema({
     default: false 
   },
   extra_blankets: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },
   extra_pillows: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },
@@ -87,12 +87,12 @@ const RoomAmenitiesSchema = new mongoose.Schema({
     default: false 
   },
   drawers: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },
   power_outlets: { 
-    type: Number, 
+    type: Boolean, 
     required: false,
     default: false 
   },

@@ -4,9 +4,6 @@ const { Address } = require('./secondary_models/address');
 const AddressSchema = require('./secondary_models/address').AddressSchema;
 const PhotoSchema = require('./secondary_models/photo').PhotoSchema;
 const VideoSchema = require('./secondary_models/video').VideoSchema;
-const BedroomSchema = require('./secondary_models/bedroom').BedroomSchema;
-const KitchenSchema = require('./secondary_models/kitchen').KitchenSchema;
-const BathroomSchema = require('./secondary_models/bathroom').BathroomSchema;
 const PropertyAmenitiesSchema = require('./secondary_models/propertyAmenities').PropertyAmenitiesSchema;
 const ReviewSchema = require('./secondary_models/review').ReviewSchema;
 
@@ -37,8 +34,13 @@ const ReviewSchema = require('./secondary_models/review').ReviewSchema;
  *         - is_proof_of_address_verified
  *         - land_use_permit
  *         - is_land_use_permit_verified
- *         - bedrooms
- *         - kitchens
+ *         - bedrooms_count
+ *         - bathrooms_count
+ *         - has_kitchen
+ *         - total_beds
+ *         - bathroom_amenities
+ *         - bedroom_amenities
+ *         - kitchen_amenities
  *       properties:
  *         is_active:
  *           type: boolean
@@ -70,21 +72,72 @@ const ReviewSchema = require('./secondary_models/review').ReviewSchema;
  *         is_land_use_permit_verified:
  *           type: boolean
  *           description: Indicates if the land use permit is verified
- *         bedrooms:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Bedroom'
- *           description: List of bedrooms
- *         kitchens:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Kitchen'
- *           description: List of kitchens
- *         bathrooms:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Bathroom'
- *           description: List of bathrooms
+ *         bedrooms_count:
+ *           type: number
+ *           description: Number of bedrooms
+ *         bathrooms_count:
+ *           type: number
+ *           description: Number of bathrooms
+ *         has_kitchen:
+ *           type: boolean
+ *           description: Indicates if the property has a kitchen
+ *         total_beds:
+ *           type: number
+ *           description: Total number of beds
+ *         bathroom_amenities:
+ *           type: object
+ *           properties:
+ *             essentials:
+ *               type: boolean
+ *               description: Indicates if the property has bathroom essentials
+ *             shampoo:
+ *               type: boolean
+ *               description: Indicates if the property has shampoo
+ *             hair_dryer:
+ *               type: boolean
+ *               description: Indicates if the property has a hair dryer
+ *             hot_water:
+ *               type: boolean
+ *               description: Indicates if the property has hot water
+ *         bedroom_amenities:
+ *           type: object
+ *           properties:
+ *             bed_linens:
+ *               type: boolean
+ *               description: Indicates if the property has bed linens
+ *             extra_pillows:
+ *               type: boolean
+ *               description: Indicates if the property has extra pillows
+ *             wardrobe:
+ *               type: boolean
+ *               description: Indicates if the property has a wardrobe
+ *             blackout_curtains:
+ *               type: boolean
+ *               description: Indicates if the property has blackout curtains
+ *         kitchen_amenities:
+ *           type: object
+ *           properties:
+ *             refrigerator:
+ *               type: boolean
+ *               description: Indicates if the property has a refrigerator
+ *             microwave:
+ *               type: boolean
+ *               description: Indicates if the property has a microwave
+ *             cooking_basics:
+ *               type: boolean
+ *               description: Indicates if the property has cooking basics
+ *             dishes_utensils:
+ *               type: boolean
+ *               description: Indicates if the property has dishes and utensils
+ *             stove:
+ *               type: boolean
+ *               description: Indicates if the property has a stove
+ *             oven:
+ *               type: boolean
+ *               description: Indicates if the property has an oven
+ *             coffee_maker:
+ *               type: boolean
+ *               description: Indicates if the property has a coffee maker
  *         width:
  *           type: number
  *           description: Width of the property
@@ -152,9 +205,28 @@ const ReviewSchema = require('./secondary_models/review').ReviewSchema;
  *         is_proof_of_address_verified: true
  *         land_use_permit: "Permit123"
  *         is_land_use_permit_verified: true
- *         bedrooms: [{...}]
- *         kitchens: [{...}]
- *         bathrooms: [{...}]
+ *         bedrooms_count: 2
+ *         bathrooms_count: 1
+ *         has_kitchen: true
+ *         total_beds: 3
+ *         bathroom_amenities:
+ *           essentials: true
+ *           shampoo: true
+ *           hair_dryer: true
+ *           hot_water: true
+ *         bedroom_amenities:
+ *           bed_linens: true
+ *           extra_pillows: true
+ *           wardrobe: true
+ *           blackout_curtains: true
+ *         kitchen_amenities:
+ *           refrigerator: true
+ *           microwave: true
+ *           cooking_basics: true
+ *           dishes_utensils: true
+ *           stove: true
+ *           oven: true
+ *           coffee_maker: true
  *         width: 10
  *         length: 20
  *         address: { ... }
@@ -234,19 +306,50 @@ const PropertySchema = new mongoose.Schema({
     required: false,
     default: null 
   },
-  bedrooms: [{ 
-    type: BedroomSchema, 
-    required: false
-  }],
-  kitchens: [{ 
-    type: KitchenSchema, 
+  bedrooms_count: { 
+    type: Number, 
     required: false,
-    default: null 
-  }],
-  bathrooms: [{ 
-    type: BathroomSchema, 
-    required: false
-  }],
+    default: 0,
+    min: 0 
+  },
+  bathrooms_count: { 
+    type: Number, 
+    required: false,
+    default: 0,
+    min: 0 
+  },
+  has_kitchen: { 
+    type: Boolean, 
+    required: false,
+    default: false 
+  },
+  total_beds: { 
+    type: Number, 
+    required: false,
+    default: 0,
+    min: 0 
+  },
+  bathroom_amenities: {
+    essentials: { type: Boolean, required: false, default: false },
+    shampoo: { type: Boolean, required: false, default: false },
+    hair_dryer: { type: Boolean, required: false, default: false },
+    hot_water: { type: Boolean, required: false, default: false }
+  },
+  bedroom_amenities: {
+    bed_linens: { type: Boolean, required: false, default: false },
+    extra_pillows: { type: Boolean, required: false, default: false },
+    wardrobe: { type: Boolean, required: false, default: false },
+    blackout_curtains: { type: Boolean, required: false, default: false }
+  },
+  kitchen_amenities: {
+    refrigerator: { type: Boolean, required: false, default: false },
+    microwave: { type: Boolean, required: false, default: false },
+    cooking_basics: { type: Boolean, required: false, default: false },
+    dishes_utensils: { type: Boolean, required: false, default: false },
+    stove: { type: Boolean, required: false, default: false },
+    oven: { type: Boolean, required: false, default: false },
+    coffee_maker: { type: Boolean, required: false, default: false }
+  },
   width: { 
     type: Number, 
     required: true,

@@ -23,7 +23,7 @@ const fileFilter = (allowedTypes) => (req, file, cb) =>
 const imageUploader = multer({
   storage: createStorage('images'),
   fileFilter: fileFilter(['image/jpeg', 'image/png', 'image/gif']),
-  limits: { fileSize: 5 * 1024 * 1024 }
+  limits: { fileSize: 25 * 1024 * 1024 }
 });
 
 const videoUploader = multer({
@@ -35,7 +35,7 @@ const videoUploader = multer({
 const pdfUploader = multer({
   storage: createStorage('pdfs'),
   fileFilter: fileFilter(['application/pdf']),
-  limits: { fileSize: 20 * 1024 * 1024 } // Límite de 10 MB para PDFs
+  limits: { fileSize: 25 * 1024 * 1024 } // Límite de 10 MB para PDFs
 });
 
 const tempUploader = multer({
